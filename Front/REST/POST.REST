@@ -1,0 +1,8 @@
+POST http://localhost:5000/contacts
+Content-Type: application/json
+
+{
+    "id":12,
+    "name": "Jane Smith sasa",
+    "number": "987654321"
+}

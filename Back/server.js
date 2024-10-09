@@ -65,5 +65,5 @@ app.put('/contacts/:id', (req,res)=>{
     console.log(body)
     res.status(200).send(body)
 })
-app.listen(5000,()=>
-console.log('server started on 3000'))
+app.listen(3001,()=>
+console.log('server started on 3001'))

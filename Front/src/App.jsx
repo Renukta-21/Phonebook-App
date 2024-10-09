@@ -8,14 +8,14 @@ function App() {
   const [editingReg, setEditingReg] = useState({ name: '', number: '' })
 
   useEffect(() => {
-    fetch('http://localhost:5000/contacts')
+    fetch('http://localhost:3001/contacts')
       .then(res => res.json())
       .then(data => setContacts(data))
     setEditingIndex(null)
   }, [])
 
   function handleDelete(id) {
-    fetch(`http://localhost:5000/contacts/${id}`, {
+    fetch(`http://localhost:3001/contacts/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json"
@@ -30,7 +30,7 @@ function App() {
 
     if (editingIndex === id) {
       setEditingIndex(null)
-      fetch(`http://localhost:5000/contacts/${id}`, {
+      fetch(`http://localhost:3001/contacts/${id}`, {
         method: "PUT",
         headers: {
           'Content-Type': 'application/json'
@@ -53,7 +53,7 @@ function App() {
     const objForm = {
       id: Number(maxId) + 1, name, number
     }
-    fetch(`http://localhost:5000/contacts`, {
+    fetch(`http://localhost:3001/contacts`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

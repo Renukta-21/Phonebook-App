@@ -1,24 +1,6 @@
 const express = require('express')
 const cors = require('cors')
-const mongoose = require('mongoose')
 const app = express()
-
-mongoose.connect('mongodb+srv://fullstack:ELhmD6Gjr0x5O3C5@cluster0.nd6u1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
-.then(()=> console.log('Conectado a mongoDB Atlas'))
-.catch(err=> console.log('An error '))
-
-const contactSchema = new mongoose.Schema({
-    name:{
-        type:String,
-        required:true
-    },
-    number:{
-        type:String,
-        required:true
-    }
-})
-
-const Contact = mongoose.model('Contact', contactSchema)
 
 app.use(cors())
 app.use(express.json())

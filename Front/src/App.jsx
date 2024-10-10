@@ -56,11 +56,11 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    const maxId = contacts.reduce((max, contact) => {
+    /* const maxId = contacts.reduce((max, contact) => {
       return contact.id > max ? contact.id : max
-    }, 0)
+    }, 0) */
     const objForm = {
-      id: Number(maxId) + 1, name, number
+      name, number
     }
     fetch(`http://localhost:3001/contacts`, {
       method: 'POST',
@@ -68,7 +68,21 @@ function App() {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(objForm)
-    }).then(res=> setContacts(prevContacts => [...prevContacts, objForm]))
+
+    }).then(res=> {
+      if(!res.ok){
+        return res.json()
+        .then(err=> {
+          throw new Error(err.error)
+        })
+      }
+      return res.json()
+    })
+    .then(res=> {
+      console.log(res)
+      setContacts(prevContacts=> [...prevContacts, {...res, id:res._id}])
+    })
+    .catch(err=> console.log(err))
     setName("")
     setNumber("")
   }

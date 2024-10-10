@@ -2,23 +2,7 @@ require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const app = express()
-const mongoose = require('mongoose')
-
-mongoose.connect(process.env.MONGO_URI)
-.then(()=> console.log('Succesful connection'))
-
-const contactScheme = new mongoose.Schema({
-    name:{
-        type:String,
-        required:true
-    },
-    number:{
-        type:String,
-        required:true
-    }
-})
-
-const Contact = mongoose.model('Contact', contactScheme)
+const Contact = require('./models/contact')
 
 app.use(cors())
 app.use(express.json())
@@ -96,9 +80,17 @@ app.delete(`/contacts/:id`, (req, res)=>{
     }
 })
 app.post('/contacts', (req, res)=>{
-    const newElement = req.body
-    contactsList = [...contactsList, newElement]
-    res.status(201).end()
+    const newElement = req.body  
+    if(newElement && newElement.name && newElement.number){
+        const newContact = new Contact(newElement)
+        newContact.save()
+        .then((data)=> {
+            console.log(`${data} was saved`)
+            res.status(201).send(data)
+        })
+    }else{
+        res.status(400).send({error:'Content missing in POST'})
+    }
 })
 app.put('/contacts/:id', (req,res)=>{
     const {id} = req.params

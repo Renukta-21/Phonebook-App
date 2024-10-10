@@ -10,7 +10,16 @@ function App() {
   useEffect(() => {
     fetch('http://localhost:3001/contacts')
       .then(res => res.json())
-      .then(data => setContacts(data))
+      .then(data => {
+         const formattedContacts = data.map(c=>{
+          return({
+            ...c,
+            id:c._id
+          })
+        })
+        setContacts(formattedContacts)
+      })
+      .catch(err=> console.log(err.message))
     setEditingIndex(null)
   }, [])
 
@@ -78,7 +87,7 @@ function App() {
       {contacts.map((cont) => {
         return (
           <div key={cont.id} style={{height:'200px', aspectRatio:'1', border:'1px solid black', padding:'15px'}}>
-            <small style={{backgroundColor:'black', color:'white', padding:'10px', borderRadius:'50%'}}>{cont.id}</small>
+            <small style={{backgroundColor:'black', color:'white', padding:'10px'}}>{cont.id}</small>
             {editingIndex === cont.id ?
               <div>
                 <label htmlFor="nameUpd">Name:</label>

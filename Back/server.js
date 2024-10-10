@@ -1,6 +1,24 @@
+require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const app = express()
+const mongoose = require('mongoose')
+
+mongoose.connect(process.env.MONGO_URI)
+.then(()=> console.log('Succesful connection'))
+
+const contactScheme = new mongoose.Schema({
+    name:{
+        type:String,
+        required:true
+    },
+    number:{
+        type:String,
+        required:true
+    }
+})
+
+const Contact = mongoose.model('Contact', contactScheme)
 
 app.use(cors())
 app.use(express.json())
@@ -18,6 +36,24 @@ let contactsList = [
     { id: 10, name: "Jack Thompson", number: "012-345-6789" }
   ];
   
+/*   contactsList.forEach(contact=>{
+    const newContact = new Contact({
+        name:contact.name,
+        number:contact.number,
+    })
+    newContact.save()
+    .then(saved=>{
+        console.log(`Contact ${contact.name} was saved`)
+    })
+    .catch(err=>{
+        console.log(`There was en error saving ${contact.name} ${err}`)
+    })
+  }) */
+
+/* Contact.deleteMany({})
+.then(()=>{
+    console.log('Contacts deleted')
+}) */
 const welcomeText = 
 `<h1>Phonebook backend</h1>
 <p>Access <b>/contacts    </b> for full list</p>
@@ -28,8 +64,14 @@ app.get('/', (req, res)=>{
 })
 
 app.get('/contacts', (req, res)=>{
-    res.send(contactsList)
+    Contact.find({})
+    .then(data=>res.send(data))
+    .catch(err=> {
+        console.log('There was en error on get /contacts: '+ err)
+        res.status(500).send({err:'Error retrieving contacts'})
+    })
 })
+
 app.get('/contacts/:id', (req, res) => {
     const { id } = req.params; // Obtén el id de los parámetros de la solicitud
     const foundElm = contactsList.find(c=> c.id==id)

@@ -56,28 +56,25 @@ app.get('/contacts', (req, res)=>{
     })
 })
 
-app.get('/contacts/:id', (req, res) => {
-    const { id } = req.params; // Obtén el id de los parámetros de la solicitud
-    const foundElm = contactsList.find(c=> c.id==id)
-    if(foundElm){
-        res.send(foundElm);
-    }else{
-        res.status(404).send({error: 'Contact not found'})
-    }
+app.get('/contacts/:id', (req, res, next) => {
+    Contact.findById(req.params.id)
+    .then(contact=> {
+        if(contact){
+            return res.send(contact)
+        }
+        res.status(404).send({err:'Contact not found'})
+    })
+    .catch(err=> next(err))
+
 });
 
-app.delete(`/contacts/:id`, (req, res)=>{
-    const {id} = req.params
-    const deleteID = Number(id)
-    const contactExists = contactsList.some(c=> c.id === deleteID)
-
-    if(contactExists){
-        contactsList = contactsList.filter(c=> c.id !== Number(id))
-        console.log('Contact deleted succesfully')
-        res.status(204).end()
-    }else{
-        res.status(404).send({error: 'contact not found'})
-    }
+app.delete(`/contacts/:id`, (req, res, next)=>{
+    Contact.findByIdAndDelete(req.params.id)
+    .then(result=>{
+        res.status(202).end()
+    })
+    
+    .catch(err=> next(err))
 })
 app.post('/contacts', (req, res)=>{
     const newElement = req.body  
@@ -93,11 +90,18 @@ app.post('/contacts', (req, res)=>{
     }
 })
 app.put('/contacts/:id', (req,res)=>{
-    const {id} = req.params
-    const body = req.body
-    contactsList = contactsList.map(c=> c.id!==Number(id) ? c : body) 
-    console.log(body)
-    res.status(200).send(body)
+    
 })
+
+const errorHandler = (err, req, res, next)=>{
+    console.log('Error:    '+err)
+    if(err.name === 'CastError') {
+        return res.status(400).send({error: 'malformatted ID'})
+    }
+    next(error)
+}
+
+app.use(errorHandler)
+
 app.listen(3001,()=>
 console.log('server started on 3001'))

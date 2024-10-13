@@ -29,7 +29,17 @@ function App() {
       headers: {
         "Content-Type": "application/json"
       }
-    }).then(() => setContacts(prevContacts=> prevContacts.filter(c=> c.id!== id)))
+    }).then((res) => {
+      console.log(res)
+      if(!res.ok){
+        return res.json()
+        .then(err=>{
+          throw new Error(err.error)
+        })
+      }else{
+        setContacts(prevContacts=> prevContacts.filter(c=> c.id!== id))
+      }
+    })
       .catch(err => console.error(err))
   }
   function handleUpdate(id) {

@@ -1,0 +1,7 @@
+PUT http://localhost:3001/contacts/670750890028abbaeb459164
+Content-Type: "application/json"
+
+{
+    "name": "Alice Sins",
+    "number": "123-456-7890"
+}

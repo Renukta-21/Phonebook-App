@@ -4,10 +4,20 @@ const cors = require('cors')
 const app = express()
 const Contact = require('./models/contact')
 
+const logger = (req, res, next) => {
+    // Ignorar las solicitudes OPTIONS y favicon.ico
+    if (req.method !== 'OPTIONS' && req.url !== '/favicon.ico') {
+        console.log(`Request: ${req.method}  ${req.url}`);
+    }
+    next();
+}
+
+
+app.use(logger)
 app.use(cors())
 app.use(express.json())
 
-let contactsList = [
+/* let contactsList = [
     { id: 1, name: "Alice Johnson", number: "123-456-7890" },
     { id: 2, name: "Bob Smith", number: "234-567-8901" },
     { id: 3, name: "Charlie Brown", number: "345-678-9012" },
@@ -19,25 +29,7 @@ let contactsList = [
     { id: 9, name: "Ivy Davis", number: "901-234-5678" },
     { id: 10, name: "Jack Thompson", number: "012-345-6789" }
   ];
-  
-/*   contactsList.forEach(contact=>{
-    const newContact = new Contact({
-        name:contact.name,
-        number:contact.number,
-    })
-    newContact.save()
-    .then(saved=>{
-        console.log(`Contact ${contact.name} was saved`)
-    })
-    .catch(err=>{
-        console.log(`There was en error saving ${contact.name} ${err}`)
-    })
-  }) */
-
-/* Contact.deleteMany({})
-.then(()=>{
-    console.log('Contacts deleted')
-}) */
+   */
 const welcomeText = 
 `<h1>Phonebook backend</h1>
 <p>Access <b>/contacts    </b> for full list</p>
@@ -105,12 +97,12 @@ app.put('/contacts/:id', (req,res, next)=>{
 const errorHandler = (err, req, res, next)=>{
     console.log('Error:    '+err)
     if(err.name === 'CastError') {
-        return res.status(400).send({error: 'malformatted ID'})
+        return res.status(400).send({error: 'malformaed ID'})
     }
     next(error)
 }
 
 app.use(errorHandler)
 
-app.listen(3001,()=>
+app.listen(process.env.PORT,()=>
 console.log('server started on 3001'))

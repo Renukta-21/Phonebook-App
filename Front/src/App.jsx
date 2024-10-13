@@ -57,7 +57,7 @@ function App() {
       }).then(res => res.json())
       .then(data=> setContacts(prevContacts=>{
         return(
-          prevContacts.map(c=>c.id!==id? c: data)
+          prevContacts.map(c=>c.id!==id? c: {...data, id:data._id})
         )
       }))
     }

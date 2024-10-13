@@ -89,8 +89,17 @@ app.post('/contacts', (req, res)=>{
         res.status(400).send({error:'Content missing in POST'})
     }
 })
-app.put('/contacts/:id', (req,res)=>{
-    
+app.put('/contacts/:id', (req,res, next)=>{
+    const updatedNote = req.body
+    console.log(req.body)
+    Contact.findByIdAndUpdate(req.params.id, updatedNote, {new:true})
+    .then(updContact=>{
+        if(updContact){
+            return res.send(updContact)
+        }
+        return res.status(404).send({error:"Contact doesn't exist"})
+    })
+    .catch(err=> next(err))
 })
 
 const errorHandler = (err, req, res, next)=>{

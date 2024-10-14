@@ -107,7 +107,7 @@ function App() {
   }
   const labelStyle = { textAlign: 'center', width: '100%', display: 'inline-block', marginTop:'10px' }
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+  <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'} }>
       <h3>PhoneBook App</h3>
       <form action="" onSubmit={handleSubmit}>
         <label htmlFor="name" style={labelStyle}>Name:</label>

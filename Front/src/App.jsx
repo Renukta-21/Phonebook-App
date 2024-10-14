@@ -7,9 +7,10 @@ function App() {
   const [number, setNumber] = useState("")
   const [editingIndex, setEditingIndex] = useState(null)
   const [editingReg, setEditingReg] = useState({ name: '', number: '' })
+  const base_URL = `https://phonebook-app-backend-6so5.onrender.com/contacts`
 
   useEffect(() => {
-    fetch('http://localhost:3001/contacts')
+    fetch(`${base_URL}`)
       .then(res => res.json())
       .then(data => {
         const formattedContacts = data.map(c => {
@@ -25,7 +26,7 @@ function App() {
   }, [])
 
   function handleDelete(id) {
-    fetch(`http://localhost:3001/contacts/${id}`, {
+    fetch(`${base_URL}/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json"
@@ -50,7 +51,7 @@ function App() {
 
     if (editingIndex === id) {
       setEditingIndex(null)
-      fetch(`http://localhost:3001/contacts/${id}`, {
+      fetch(`${base_URL}/${id}`, {
         method: "PUT",
         headers: {
           'Content-Type': 'application/json'
@@ -73,7 +74,7 @@ function App() {
     const objForm = {
       name, number
     }
-    fetch(`http://localhost:3001/contacts`, {
+    fetch(`${base_URL}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

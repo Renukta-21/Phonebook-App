@@ -6,7 +6,8 @@ mongoose.connect(process.env.MONGO_URI)
 const contactScheme = new mongoose.Schema({
     name:{
         type:String,
-        required:true
+        required:true,
+        minLength:5,
     },
     number:{
         type:String,

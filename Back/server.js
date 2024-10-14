@@ -68,7 +68,7 @@ app.delete(`/contacts/:id`, (req, res, next)=>{
     
     .catch(err=> next(err))
 })
-app.post('/contacts', (req, res)=>{
+app.post('/contacts', (req, res, next)=>{
     const newElement = req.body  
     if(newElement && newElement.name && newElement.number){
         const newContact = new Contact(newElement)
@@ -77,6 +77,7 @@ app.post('/contacts', (req, res)=>{
             console.log(`${data} was saved`)
             res.status(201).send(data)
         })
+        .catch(err=> next(err))
     }else{
         res.status(400).send({error:'Content missing in POST'})
     }
@@ -94,13 +95,18 @@ app.put('/contacts/:id', (req,res, next)=>{
     .catch(err=> next(err))
 })
 
-const errorHandler = (err, req, res, next)=>{
-    console.log('Error:    '+err)
-    if(err.name === 'CastError') {
-        return res.status(400).send({error: 'malformaed ID'})
+const errorHandler = (err, req, res, next) => {
+    console.log('Error---------------------->    ' + err);
+    console.log('');
+
+    if (err.name === 'CastError') {
+        return res.status(400).send({ error: 'Malformatted ID' });
+    }else if(err.name==='ValidationError'){
+        return res.status(400).send({error:err.message})
     }
-    next(error)
-}
+
+    next(err);
+};
 
 app.use(errorHandler)
 

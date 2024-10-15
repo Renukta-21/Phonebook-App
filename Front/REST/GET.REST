@@ -1,2 +1,2 @@
-GET http://localhost:3001/contacts/670750890028abbaeb459164
+GET http://localhost:3001/api/contacts
 
